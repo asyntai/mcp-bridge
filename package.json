@@ -1,0 +1,44 @@
+{
+  "name": "@asyntai/mcp",
+  "version": "1.0.0",
+  "mcpName": "com.asyntai/support-agent",
+  "description": "Connect any local MCP client to your Asyntai account. Bridges stdio to the hosted Asyntai MCP server and handles the OAuth sign-in for you.",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "asyntai-mcp": "src/cli.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "model-context-protocol",
+    "chatbot",
+    "ai",
+    "customer-support",
+    "oauth",
+    "claude",
+    "asyntai"
+  ],
+  "homepage": "https://asyntai.com/documentation/mcp/",
+  "bugs": {
+    "url": "https://github.com/asyntai/mcp-bridge/issues",
+    "email": "hello@asyntai.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asyntai/mcp-bridge.git"
+  },
+  "author": "Asyntai <hello@asyntai.com> (https://asyntai.com)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0"
+  },
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\""
+  }
+}
