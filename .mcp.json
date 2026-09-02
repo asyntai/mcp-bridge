@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "asyntai": {
+      "type": "http",
+      "url": "https://asyntai.com/mcp"
+    }
+  }
+}
