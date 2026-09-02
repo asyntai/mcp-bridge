@@ -80,6 +80,23 @@ npm test
 
 No dependencies, and none planned. Node 18 or newer.
 
+## Claude Desktop extension
+
+The same bridge ships as a Claude Desktop extension (`.mcpb`). Install it from
+the Extensions directory in Claude Desktop, or build it yourself:
+
+```bash
+npx @anthropic-ai/mcpb pack
+```
+
+## Privacy Policy
+
+This bridge stores nothing except the OAuth tokens described above, on your
+own machine. Every message goes only to the Asyntai server you connected to
+(by default `https://asyntai.com/mcp`), which processes it under the
+[Asyntai privacy policy](https://asyntai.com/privacy-policy/). No analytics,
+no third-party services, no telemetry from this package.
+
 ## Links
 
 - [Connector documentation](https://asyntai.com/documentation/mcp/)

@@ -1,0 +1,276 @@
+{
+  "manifest_version": "0.3",
+  "name": "asyntai",
+  "display_name": "Asyntai – AI Support Agent for Websites",
+  "version": "1.0.1",
+  "description": "Run your website's Asyntai AI support agent: knowledge base, agent instructions, conversations, leads, live replies and plan usage.",
+  "long_description": "Asyntai puts an AI support agent on your website that answers visitors from your own content.\n\nThis extension connects Claude Desktop to your Asyntai account with 54 tools:\n\n- **Knowledge**: add pages, files and text to the agent's knowledge base, recrawl your site, review what it knows\n- **Instructions**: read and edit the agent's instructions and settings\n- **Conversations and leads**: read chats, find unanswered questions, export leads\n- **Live replies**: see who is chatting now and answer a visitor yourself\n- **Account**: check plan limits and usage, compare plans\n\nSign-in is OAuth in your browser. No API key. The free Asyntai plan works.\n\nDocs: https://asyntai.com/documentation/mcp/",
+  "author": {
+    "name": "Asyntai",
+    "email": "hello@asyntai.com",
+    "url": "https://asyntai.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asyntai/mcp-bridge.git"
+  },
+  "homepage": "https://asyntai.com",
+  "documentation": "https://asyntai.com/documentation/mcp/",
+  "support": "https://github.com/asyntai/mcp-bridge/issues",
+  "icon": "logo.png",
+  "server": {
+    "type": "node",
+    "entry_point": "src/cli.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/src/cli.js"
+      ],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "list_websites",
+      "description": "List the websites (AI agents) on this Asyntai account, with the id every other tool takes. Start here when the account may have more than one."
+    },
+    {
+      "name": "get_account",
+      "description": "Get the signed-in account's email, plan, and how many chat messages it has used against its monthly allowance."
+    },
+    {
+      "name": "list_plans",
+      "description": "List every Asyntai plan with its price, monthly message allowance and the features it includes, alongside the plan this account is on. Use it to answer which plan someone should move to, and why."
+    },
+    {
+      "name": "search_asyntai_docs",
+      "description": "Search Asyntai's own product documentation and get back the pages that match, with a short excerpt from each. Use this to find out how a feature works before changing anything, rather than guessing. This searches Asyntai's documentation, NOT the customer's own content: for that, use search_knowledge_base. Matching is by keyword, so if the results look wrong, search again using Asyntai's own feature names, for example data feed, widget pinning, access tags, AI instructions."
+    },
+    {
+      "name": "get_asyntai_doc",
+      "description": "Read one page of Asyntai's documentation in full, given the url or slug from search_asyntai_docs, for example /documentation/mcp/ or just mcp."
+    },
+    {
+      "name": "get_website",
+      "description": "Get the full record for one website: its name, domain, platform, widget id and the embed code to paste into the site."
+    },
+    {
+      "name": "create_website",
+      "description": "Add a new website (a new AI agent) to the account and return its embed code. Each plan allows a limited number of websites, and this refuses once that limit is reached. By default it also starts a crawl of the site to build the knowledge base."
+    },
+    {
+      "name": "get_widget_settings",
+      "description": "Read all appearance and behaviour settings for one website's chat widget: colours, greeting, position, auto-trigger, data collection, bookings and the rest. Also returns which settings this account's plan cannot change, and the plan each of those needs."
+    },
+    {
+      "name": "update_widget_settings",
+      "description": "Change one or more chat widget settings. Pass an object of setting name to new value; read them with get_widget_settings first. Changes are live for every visitor at once. Settings the plan does not include are refused with the plan they need, and nothing is written unless every value is valid."
+    },
+    {
+      "name": "set_data_feed",
+      "description": "Point the chatbot at a product feed and index it. This fetches the feed, checks it really is a feed, clears whatever was indexed before, and rebuilds the index in the background. Send an empty url to remove the feed. Needs the Standard plan or higher."
+    },
+    {
+      "name": "set_data_feed_max",
+      "description": "Same as set_data_feed, for the Max tier, which indexes a larger catalogue. Fetches, validates, clears the old index and rebuilds it in the background. Needs the Pro plan or higher."
+    },
+    {
+      "name": "set_access_tags",
+      "description": "Switch Access Tags on or off for one website. Turning it on creates the signing secret your server needs to sign visitor entitlements. Needs the Enterprise plan."
+    },
+    {
+      "name": "set_widget_pinning",
+      "description": "Freeze the chat widget at its current version, so the site always serves the same copy with an integrity hash. Turning it on builds that snapshot and changes the embed code. Needs the Enterprise plan."
+    },
+    {
+      "name": "get_website_features",
+      "description": "Read the plan-gated features for one website: Real-Time Data Feed and its Max tier, Product Cards, Dynamic Images, User Context, Link Parameters, Chat Retention, Chat Categories, Access Tags, Widget Pinning, Zero Retention, PII Redaction and the Output Classifier. Shows current values, which features the plan allows, and the plan each locked feature needs."
+    },
+    {
+      "name": "update_website_features",
+      "description": "Turn website features on or off and set their values, for example the Real-Time Data Feed URL or the PII Redaction rules. Pass an object of field name to value; read them with get_website_features first. A feature the plan does not include is refused with the plan it needs. These change how the live chatbot behaves for every visitor."
+    },
+    {
+      "name": "search_knowledge_base",
+      "description": "Search one website's knowledge base and return the passages the chatbot would retrieve for this question, with a relevance score. Use this to check what the chatbot knows about a topic. It does not generate an answer and does not use the message allowance."
+    },
+    {
+      "name": "list_knowledge",
+      "description": "List the sources in one website's knowledge base: uploaded text, documents, added pages and crawls."
+    },
+    {
+      "name": "add_knowledge_text",
+      "description": "Add a titled block of text to one website's knowledge base. The chatbot can use it in answers as soon as this returns. Adds a new entry; it never replaces an existing one."
+    },
+    {
+      "name": "delete_knowledge_entry",
+      "description": "Permanently delete one knowledge base entry and every passage built from it. The chatbot stops using that content immediately. This cannot be undone."
+    },
+    {
+      "name": "get_ai_instructions",
+      "description": "Get the instructions that shape how one website's chatbot answers: its role, tone and rules."
+    },
+    {
+      "name": "update_ai_instructions",
+      "description": "Replace one website's AI instructions with new text. This overwrites the current instructions and changes how the live chatbot answers every visitor. Read them with get_ai_instructions first, and show the user what will change before calling this."
+    },
+    {
+      "name": "get_knowledge_entry",
+      "description": "Read the stored text of one knowledge base entry. Works for the content you supplied: text, documents, spreadsheets, single pages and videos. A website crawl is listed but not exported, because the source is your own public site."
+    },
+    {
+      "name": "add_knowledge_url",
+      "description": "Fetch one web page and add its text to the knowledge base. Use this for a single page. To take in a whole site, use start_crawl instead."
+    },
+    {
+      "name": "set_knowledge_tags",
+      "description": "Restrict who can retrieve one knowledge base entry. A visitor must present a matching tag, signed by your own server, before the chatbot will use the entry. Send an empty list to make it public again. Access Tags needs the Enterprise plan."
+    },
+    {
+      "name": "start_crawl",
+      "description": "Crawl a website and add its pages to the knowledge base. Runs in the background; check on it with list_crawls. Each plan caps the pages per crawl, and asking for more than the cap is refused."
+    },
+    {
+      "name": "list_crawls",
+      "description": "List recent crawl jobs for one website with their status, how many pages they took, and why each one stopped."
+    },
+    {
+      "name": "list_conversations",
+      "description": "List recent visitor conversations for one website, newest first, with the session id, message count and any email or phone the visitor gave."
+    },
+    {
+      "name": "get_conversation",
+      "description": "Read the full message history of one conversation, in order, from its session id."
+    },
+    {
+      "name": "list_leads",
+      "description": "List the email addresses and phone numbers visitors left in chat, newest first, with the page they were on."
+    },
+    {
+      "name": "get_analytics",
+      "description": "Summarise one website's chat activity over a period: conversations, messages, leads captured, escalations, and the countries visitors came from."
+    },
+    {
+      "name": "list_knowledge_gaps",
+      "description": "List the Knowledge Gaps Asyntai recorded: real visitor questions the chatbot could not answer. Use this to find what to fill in with add_knowledge_text. Needs the Standard plan or higher."
+    },
+    {
+      "name": "list_images",
+      "description": "List the images the chatbot may show a visitor, with the description that tells it when each one is relevant."
+    },
+    {
+      "name": "add_image",
+      "description": "Add an image the chatbot may show. The description is what the AI reads to decide when the image answers the question, so describe what it shows and when it helps."
+    },
+    {
+      "name": "delete_image",
+      "description": "Remove one image so the chatbot stops showing it."
+    },
+    {
+      "name": "list_products",
+      "description": "List the products the chatbot can show as cards, with price and links. Product Cards needs the Standard plan or higher."
+    },
+    {
+      "name": "add_product",
+      "description": "Add a product the chatbot can show as a card. Needs the Standard plan or higher."
+    },
+    {
+      "name": "delete_product",
+      "description": "Remove one product so the chatbot stops offering it."
+    },
+    {
+      "name": "list_booking_types",
+      "description": "List the appointment types visitors can book, with length, price and how many spots each has. Bookings needs the Standard plan or higher."
+    },
+    {
+      "name": "list_embeds",
+      "description": "List the third-party tools embedded in the chat, such as a booking calendar or a form. Embeds needs the Standard plan or higher."
+    },
+    {
+      "name": "list_tickets",
+      "description": "List support tickets raised from chat, with status, priority and the visitor's details. Needs the Standard plan or higher."
+    },
+    {
+      "name": "list_webhooks",
+      "description": "List the webhooks registered on this account. The signing secret is never returned; it is shown once, when the webhook is created."
+    },
+    {
+      "name": "add_webhook",
+      "description": "Register a URL to receive events, for example every new message. Returns a signing secret once; store it, because it is never shown again. Needs a paid plan."
+    },
+    {
+      "name": "delete_webhook",
+      "description": "Delete one webhook. Events stop reaching that address at once."
+    },
+    {
+      "name": "list_active_sessions",
+      "description": "List the visitors currently in a chat: which page they are on, their country, how long they have been there, and whether a human has taken the conversation over. Needs the Standard plan or higher."
+    },
+    {
+      "name": "take_over_conversation",
+      "description": "Stop the AI answering one conversation so a human can reply instead. The visitor is told a person has joined. Use send_agent_reply afterwards, and release_conversation when done. Needs the Standard plan or higher."
+    },
+    {
+      "name": "release_conversation",
+      "description": "Hand a taken-over conversation back to the AI, which answers the visitor again from the next message."
+    },
+    {
+      "name": "send_agent_reply",
+      "description": "Send a message, as a human agent, to a real visitor who is chatting right now. Take the conversation over first. The visitor sees this immediately, so show the user the exact wording and get their agreement before calling this."
+    },
+    {
+      "name": "get_daily_report",
+      "description": "Say whether the daily email summary is on for one website, and when the last one went out."
+    },
+    {
+      "name": "set_daily_report",
+      "description": "Turn the daily email summary of chats on or off for one website. Needs the Standard plan or higher."
+    },
+    {
+      "name": "list_audit_log",
+      "description": "Read the record of what changed on this account: who did it, when, and from where. Recorded on the Enterprise plan only."
+    },
+    {
+      "name": "list_team_members",
+      "description": "List the people who share this account, what each may reach, and how many seats the plan allows."
+    },
+    {
+      "name": "list_widget_translations",
+      "description": "List the languages the chat widget has its own wording for, with the greeting and agent name used in each."
+    },
+    {
+      "name": "set_widget_translation",
+      "description": "Set the chat widget's greeting, agent name and bubble text for one language. A visitor in that language sees this wording instead of the default."
+    },
+    {
+      "name": "ask_ai",
+      "description": "Ask one website's chatbot a question and get the answer a real visitor would receive. Use this to test the bot. It spends one message from the account's monthly allowance, and it calls an external model provider."
+    }
+  ],
+  "tools_generated": false,
+  "keywords": [
+    "customer support",
+    "chatbot",
+    "ai agent",
+    "live chat",
+    "leads",
+    "knowledge base",
+    "website",
+    "asyntai"
+  ],
+  "license": "MIT",
+  "privacy_policies": [
+    "https://asyntai.com/privacy-policy/"
+  ],
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}
