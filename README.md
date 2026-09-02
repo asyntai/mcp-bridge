@@ -3,7 +3,7 @@
 Connect any MCP client to your [Asyntai](https://asyntai.com) account.
 
 Asyntai puts an AI support agent on your website that answers visitors from
-your own content. This package gives your assistant the same 52 tools the
+your own content. This package gives your assistant the same 54 tools the
 Asyntai dashboard has: add knowledge, edit the agent's instructions, read
 conversations and leads, and reply to a live visitor yourself.
 
