@@ -1,0 +1,12 @@
+{
+  "name": "asyntai",
+  "description": "Run your website's Asyntai AI support agent from Cursor: manage the knowledge base, edit agent instructions, read conversations and leads, reply live to visitors and check plan usage.",
+  "version": "1.0.1",
+  "author": { "name": "Asyntai", "email": "hello@asyntai.com" },
+  "homepage": "https://asyntai.com/documentation/mcp/",
+  "repository": "https://github.com/asyntai/mcp-bridge",
+  "license": "MIT",
+  "keywords": ["mcp", "customer-support", "chatbot", "ai-agent", "live-chat", "leads", "knowledge-base", "asyntai"],
+  "logo": "logo.png",
+  "mcpServers": "mcp.json"
+}
