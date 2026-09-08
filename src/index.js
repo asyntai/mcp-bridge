@@ -80,6 +80,19 @@ export async function getAccessToken(serverUrl, deps = {}) {
 }
 
 /**
+ * The saved token when it is still valid, otherwise null. Never opens a
+ * browser and never touches the network: this is what the loop starts with,
+ * so that a client which only reads the catalogue never sees a sign-in.
+ */
+export async function cachedAccessToken(serverUrl, deps = {}) {
+  const { now = Date.now() } = deps;
+  const load = deps.load || loadStore;
+  const entry = (await load())[serverUrl] || {};
+  if (entry.token && !isExpired(entry.token, now)) return entry.token.access_token;
+  return null;
+}
+
+/**
  * Split a stdio byte stream into whole JSON-RPC messages.
  *
  * The transport is newline-delimited, but a chunk boundary can land anywhere,
@@ -116,8 +129,10 @@ export async function forward(message, context) {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json, text/event-stream',
-    Authorization: `Bearer ${token}`,
   };
+  // No token yet is a normal state: initialize and tools/list are answered
+  // anonymously, and the server's 401 on anything else is what starts sign-in.
+  if (token) headers.Authorization = `Bearer ${token}`;
   if (protocolVersion) headers['MCP-Protocol-Version'] = protocolVersion;
 
   const response = await fetchImpl(serverUrl, {
@@ -160,7 +175,10 @@ export async function run(options = {}) {
   const auth = (extra = {}) =>
     getAccessToken(serverUrl, { fetchImpl, load, save, ...extra });
 
-  let token = await auth();
+  // Start with whatever is saved, and nothing more. Opening the browser here
+  // would block a client that only wants the tool catalogue, and would hang
+  // a directory scanner that has no browser at all.
+  let token = await cachedAccessToken(serverUrl, { load });
   let protocolVersion = null;
 
   const write = (payload) => output.write(`${JSON.stringify(payload)}\n`);
@@ -187,8 +205,10 @@ export async function run(options = {}) {
         // Exactly one retry on 401. A token can be revoked mid-session, and a
         // silent re-auth beats making somebody restart their client. Retrying
         // more than once would loop against a server that always says 401.
+        // `force` only when a token was actually sent and refused; with none
+        // sent, a saved refresh token may still spare the browser round trip.
         if (status === 401) {
-          token = await auth({ force: true });
+          token = await auth({ force: token !== null });
           ({ status, reply } = await forward(
             message, { serverUrl, token, protocolVersion, fetchImpl }));
         }

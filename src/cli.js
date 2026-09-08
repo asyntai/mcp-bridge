@@ -16,8 +16,8 @@ const USAGE = `Asyntai MCP bridge
   asyntai-mcp logout [url]     Forget the saved sign-in
   asyntai-mcp --help           Show this
 
-Point your MCP client's command at "npx -y @asyntai/mcp". The first run opens
-a browser once so you can approve access to your Asyntai account.
+Point your MCP client's command at "npx -y @asyntai/mcp". The first tool call
+opens a browser once so you can approve access to your Asyntai account.
 `;
 
 async function logout(serverUrl) {

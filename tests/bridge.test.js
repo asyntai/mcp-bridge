@@ -9,7 +9,7 @@ import assert from 'node:assert/strict';
 import { PassThrough } from 'node:stream';
 
 import {
-  createLineReader, forward, getAccessToken, rpcError, run,
+  cachedAccessToken, createLineReader, forward, getAccessToken, rpcError, run,
 } from '../src/index.js';
 import { isExpired, makePkce, redirectUri, PORTS } from '../src/oauth.js';
 
@@ -83,6 +83,17 @@ test('the bearer token is attached', async () => {
     fetchImpl: async (_url, init) => { seen = init.headers; return json({}); },
   });
   assert.equal(seen.Authorization, 'Bearer abc123');
+});
+
+test('no Authorization header is sent while there is no token', async () => {
+  // A scanner, or a client that only lists tools, must get the anonymous
+  // answer rather than a malformed "Bearer null".
+  let seen;
+  await forward({ id: 1, method: 'tools/list' }, {
+    serverUrl: 'https://example/mcp', token: null,
+    fetchImpl: async (_url, init) => { seen = init.headers; return json({}); },
+  });
+  assert.equal('Authorization' in seen, false);
 });
 
 test('the negotiated protocol version is sent once it is known', async () => {
@@ -219,14 +230,15 @@ test('every redirect URI is loopback, which is what the server accepts', () => {
  * home directory. A cached, valid token is seeded so the loop starts without
  * trying to open a browser.
  */
-function harness(handleMcp) {
-  const store = {
-    'https://example/mcp': {
-      meta: META,
-      clientId: 'c',
-      token: { access_token: 'live', refresh_token: 'r', expires_at: Date.now() + 3_600_000 },
-    },
-  };
+const signedIn = () => ({
+  'https://example/mcp': {
+    meta: META,
+    clientId: 'c',
+    token: { access_token: 'live', refresh_token: 'r', expires_at: Date.now() + 3_600_000 },
+  },
+});
+
+function harness(handleMcp, store = signedIn()) {
 
   const fetchImpl = async (url, init) => {
     if (String(url).endsWith('/mcp')) return handleMcp(url, init);
@@ -314,6 +326,43 @@ test('a 401 is retried once with a fresh token', async () => {
 
   assert.equal(calls, 2);
   assert.deepEqual(JSON.parse(written[0]).result, { ok: true });
+});
+
+test('the loop starts without a saved sign-in and lists tools anonymously', async () => {
+  // This is the Glama build check: a container with no browser and no
+  // credentials sends initialize and tools/list and must get answers.
+  const headersSeen = [];
+  const { input, written, done } = harness(async (_url, init) => {
+    headersSeen.push(init.headers);
+    return json({ jsonrpc: '2.0', id: JSON.parse(init.body).id, result: { tools: [] } });
+  }, {});
+
+  input.write('{"jsonrpc":"2.0","id":1,"method":"initialize"}\n{"jsonrpc":"2.0","id":2,"method":"tools/list"}\n');
+  input.end();
+  await done;
+
+  assert.deepEqual(written.map((line) => JSON.parse(line).id), [1, 2]);
+  assert.ok(headersSeen.every((h) => !('Authorization' in h)));
+});
+
+test('a saved token is used from the first message', async () => {
+  let seen;
+  const { input, done } = harness(async (_url, init) => {
+    seen = init.headers;
+    return json({ jsonrpc: '2.0', id: 1, result: {} });
+  });
+  input.write('{"jsonrpc":"2.0","id":1,"method":"tools/list"}\n');
+  input.end();
+  await done;
+  assert.equal(seen.Authorization, 'Bearer live');
+});
+
+test('cachedAccessToken never returns an expired token', async () => {
+  const load = async () => ({
+    'https://example/mcp': { token: { access_token: 'old', expires_at: 1 } },
+  });
+  assert.equal(await cachedAccessToken('https://example/mcp', { load, now: 2_000_000 }), null);
+  assert.equal(await cachedAccessToken('https://other/mcp', { load }), null);
 });
 
 test('rpcError uses null when there is no id to answer', () => {

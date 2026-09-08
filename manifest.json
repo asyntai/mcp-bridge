@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "asyntai",
   "display_name": "Asyntai – AI Support Agent for Websites",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Run your website's Asyntai AI support agent: knowledge base, agent instructions, conversations, leads, live replies and plan usage.",
   "long_description": "Asyntai puts an AI support agent on your website that answers visitors from your own content.\n\nThis extension connects Claude Desktop to your Asyntai account with 54 tools:\n\n- **Knowledge**: add pages, files and text to the agent's knowledge base, recrawl your site, review what it knows\n- **Instructions**: read and edit the agent's instructions and settings\n- **Conversations and leads**: read chats, find unanswered questions, export leads\n- **Live replies**: see who is chatting now and answer a visitor yourself\n- **Account**: check plan limits and usage, compare plans\n\nSign-in is OAuth in your browser. No API key. The free Asyntai plan works.\n\nDocs: https://asyntai.com/documentation/mcp/",
   "author": {

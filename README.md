@@ -31,7 +31,7 @@ other and handles the sign-in.
 }
 ```
 
-The first run opens a browser once so you can approve access. After that it is
+The first tool call opens a browser once so you can approve access. After that it is
 silent. You need an Asyntai account; the free plan works.
 
 ## Commands
