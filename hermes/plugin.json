@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "asyntai",
+  "version": "1.0.0",
+  "description": "Run your website's Asyntai AI support agent from Hermes: manage the knowledge base, edit agent instructions, read conversations and leads, reply live to visitors and check plan usage.",
+  "author": {
+    "name": "Asyntai",
+    "email": "hello@asyntai.com",
+    "url": "https://asyntai.com"
+  },
+  "homepage": "https://asyntai.com/documentation/mcp/",
+  "repository": "https://github.com/asyntai/mcp-bridge",
+  "license": "MIT",
+  "keywords": ["mcp", "customer-support", "chatbot", "ai-agent", "live-chat", "leads", "knowledge-base", "asyntai"],
+  "extensions": {
+    "com.nousresearch.hermes": {
+      "servers": {
+        "asyntai": { "trust": "untrusted" }
+      }
+    }
+  }
+}
