@@ -1,6 +1,6 @@
 {
   "name": "asyntai",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Run your website's Asyntai AI support agent from Gemini CLI: manage the knowledge base, edit agent instructions, read conversations and leads, reply live to visitors and check plan usage. OAuth sign-in, no API key.",
   "mcpServers": {
     "asyntai": {

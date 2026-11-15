@@ -1,7 +1,7 @@
 {
   "name": "asyntai",
   "displayName": "Asyntai – AI Support Agent for Websites",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Run your website's Asyntai AI support agent from Claude Code: manage the knowledge base, edit agent instructions, read conversations and leads, reply live to visitors and check plan usage.",
   "author": { "name": "Asyntai", "email": "hello@asyntai.com", "url": "https://github.com/asyntai" },
   "homepage": "https://asyntai.com/documentation/mcp/",
